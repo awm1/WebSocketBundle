@@ -77,13 +77,12 @@ class TopicPeriodicTimer implements \IteratorAggregate
     public function cancelPeriodicTimer(TopicInterface $topic, string $name): void
     {
         $namespace = $this->getTopicNamespace($topic);
+        $timer = $this->registry[$namespace][$name] ?? null;
 
-        if (!isset($this->registry[$namespace][$name])) {
-            return;
+        if ($timer instanceof TimerInterface) {
+            $this->loop->cancelTimer($timer);
         }
 
-        $timer = $this->registry[$namespace][$name];
-        $this->loop->cancelTimer($timer);
         unset($this->registry[$namespace][$name]);
     }
 
@@ -91,8 +90,10 @@ class TopicPeriodicTimer implements \IteratorAggregate
     {
         $namespace = $this->getTopicNamespace($topic);
 
-        foreach ($this->registry[$namespace] as $timer) {
-            $this->loop->cancelTimer($timer);
+        if (isset($this->registry[$namespace]) && is_array($this->registry[$namespace])) {
+            foreach ($this->registry[$namespace] as $timer) {
+                $this->loop->cancelTimer($timer);
+            }
         }
 
         unset($this->registry[$namespace]);
