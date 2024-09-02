@@ -49,7 +49,7 @@ final class WebsocketServerCommand extends Command
         $this
             ->setDescription('Starts the websocket server')
             ->addArgument('name', InputArgument::OPTIONAL, 'Name of the server to start, launches the first registered server if not specified')
-            ->addOption('profile', 'm', InputOption::VALUE_NONE, 'Enable profiling of the server')
+            ->addOption('profiling', 'm', InputOption::VALUE_NONE, 'Enable profiling of the server')
             ->addOption('host', 'a', InputOption::VALUE_OPTIONAL, 'The hostname of the websocket server')
             ->addOption('port', 'p', InputOption::VALUE_OPTIONAL, 'The port of the websocket server');
     }
@@ -70,7 +70,7 @@ final class WebsocketServerCommand extends Command
         }
 
         /** @var bool $profile */
-        $profile = $input->getOption('profile');
+        $profile = $input->getOption('profiling');
 
         $this->serverLauncher->launch($name, $host, (int) $port, $profile);
 
